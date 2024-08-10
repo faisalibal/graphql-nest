@@ -1,0 +1,58 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ChatRoom {
+  id: ID!
+  name: String!
+  participants: [User!]!
+  messages: [Message!]!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Message {
+  id: ID!
+  content: String!
+  sender: User!
+  chatRoom: ChatRoom!
+  createdAt: DateTime!
+  isDeletedForSender: Boolean!
+  isDeletedForEveryone: Boolean!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  messages: [Message!]
+}
+
+type Query {
+  users: [User!]!
+  user(id: Float!): User!
+  messages(chatRoomId: Float!, userId: Float!): [Message!]!
+  chatRooms: [ChatRoom!]!
+}
+
+type Mutation {
+  createUser(name: String!, email: String!, password: String!): User!
+  updateUser(id: Float!, name: String, email: String): User!
+  createMessage(content: String!, senderId: Float!, chatRoomId: Float!): Message!
+  deleteMessageForSender(messageId: Float!, senderId: Float!): Boolean!
+  deleteMessageForEveryone(messageId: Float!, senderId: Float!): Boolean!
+  createChatRoom(name: String!, participantIds: [Float!]!): ChatRoom!
+  login(email: String!, password: String!): String!
+}
+
+type Subscription {
+  messageAdded(chatRoomId: Float!): Message!
+  messageDeleted(chatRoomId: Float!): Message!
+  messageDeletedForEveryone(chatRoomId: Float!): Message!
+  chatRoomCreated: ChatRoom!
+}
